@@ -7,6 +7,7 @@ s = geopandas.GeoSeries(
          shapely.geometry.Point(1, 1),
          shapely.geometry.Point(0, 1),
      ],
+     index=range(1, 5),
      
  )
 s2 = geopandas.GeoSeries(
@@ -19,3 +20,5 @@ s2 = geopandas.GeoSeries(
      index=range(1, 5),
  )
 s.intersects(s2,align=True)
+line = shapely.geometry.LineString([(-1, 1), (3, 1)])
+print(s.intersects(line))
