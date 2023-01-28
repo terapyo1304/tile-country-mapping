@@ -1,5 +1,11 @@
 import geopandas
 import shapely
+import matplotlib
+import matplotlib.pyplot as plt
+import plotly.express as px
+import pandas
+import sentinelsat as ss
+
 
 tile= geopandas.GeoSeries(
     [
@@ -27,4 +33,25 @@ country=geopandas.GeoSeries(
     ]
 
 )
-print(country.intersects(tile))
+#print(country.intersects(tile))
+df=pandas.read_csv("COUNTRIES.csv")
+#print(df)
+#using geopandas to convert lat and long to points
+df_geo=geopandas.GeoDataFrame(df,geometry=geopandas.points_from_xy(df.LATITUDE, df.LONGITUDE))
+#points_from_xy indicates 2 dimensions
+#print(df_geo)
+world_data=geopandas.read_file(geopandas.datasets.get_path('naturalearth_lowres'))
+axis=world_data[world_data.continent=='Africa'].plot(color='blue', edgecolor='black' )
+print(df_geo.plot(ax=axis, color='black'))
+#guessing country names
+f=px.choropleth(
+    df,
+    locationmode='country names',
+    locations=df['COUNTRY'],
+    scope='africa',
+    color=df['COUNTRY']
+)
+f.show()
+api = ss.SentinelAPI('aryamanskatoch', 'Chungus-rdr2', 'https://apihub.copernicus.eu/apihub')
+api.download('04548172-c64a-418f-8e83-7a4d148adf1e')
+api.get_product_odata('04548172-c64a-418f-8e83-7a4d148adf1e')
