@@ -35,9 +35,9 @@ country=geopandas.GeoSeries(
 )
 #print(country.intersects(tile))
 df=pandas.read_csv("COUNTRIES.csv")
-#print(df)
+
 #using geopandas to convert lat and long to points
-df_geo=geopandas.GeoDataFrame(df,geometry=geopandas.points_from_xy(df.LATITUDE, df.LONGITUDE))
+#df_geo=geopandas.GeoDataFrame(df,geometry=geopandas.points_from_xy(df.LATITUDE, df.LONGITUDE))
 #points_from_xy indicates 2 dimensions
 #print(df_geo)
 '''world_data=geopandas.read_file(geopandas.datasets.get_path('naturalearth_lowres'))
@@ -52,22 +52,38 @@ f=px.choropleth(
     color=df['COUNTRY']
 )
 f.show()'''
+
+tiledata=geopandas.read_file('/Users/indukatoch/Desktop/tile-country-mapping/Sentinel-2-Shapefile-Index/sentinel_2_index_shapefile.shp')
 tilename=input("enter tile name")
+countries=geopandas.read_file('/Users/indukatoch/Desktop/tile-country-mapping/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp')
 df2=geopandas.read_file('/Users/indukatoch/Desktop/tile-country-mapping/Sentinel-2-Shapefile-Index/sentinel_2_index_centroid.shp')
 df2_geo=geopandas.GeoDataFrame(df2,geometry=geopandas.points_from_xy(df2.POINT_X, df2.POINT_Y))
 
-for i in df2_geo.index:
+'''for i in df2_geo.index:
     if df2_geo['Name'][i]==tilename:
         print(df2_geo['geometry'][i]) 
         tile_point=df2_geo['geometry'][i]
 
 
-for j in df.index:
-    country_name=df['COUNTRY'][j]
-    country_point=df['geometry'][j]
-    
+for j in df_geo.index:
+    country_name=df_geo['COUNTRY'][j]
+    country_point=df_geo['geometry'][j]
+    print(country_point.intersects(tile_point))
     if country_point.intersects(tile_point)!=False:
         print('tile lies in',country_name)
     else:
-        continue
+        continue'''
 
+for i in tiledata.index:
+    if tiledata['Name'][i]==tilename:
+        t_geom=tiledata['geometry'][i]
+        print(t_geom)
+
+for j in countries.index:
+    c_geom=countries['geometry'][j]
+    c_admin=countries['ADMIN'][j]
+    if t_geom.intersects(c_geom)==True:
+        print(tilename," lies in ",c_admin)
+    else:
+        continue
+    
