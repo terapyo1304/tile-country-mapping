@@ -52,12 +52,12 @@ f=px.choropleth(
     color=df['COUNTRY']
 )
 f.show()'''
-ee='34NCF'
+tilename=input("enter tile name")
 df2=geopandas.read_file('/Users/indukatoch/Desktop/tile-country-mapping/Sentinel-2-Shapefile-Index/sentinel_2_index_centroid.shp')
 df2_geo=geopandas.GeoDataFrame(df2,geometry=geopandas.points_from_xy(df2.POINT_X, df2.POINT_Y))
 
 for i in df2_geo.index:
-    if df2_geo['Name'][i]==ee:
+    if df2_geo['Name'][i]==tilename:
         print(df2_geo['geometry'][i]) 
         tile_point=df2_geo['geometry'][i]
 
