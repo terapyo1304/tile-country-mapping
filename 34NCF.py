@@ -40,7 +40,7 @@ df=pandas.read_csv("COUNTRIES.csv")
 df_geo=geopandas.GeoDataFrame(df,geometry=geopandas.points_from_xy(df.LATITUDE, df.LONGITUDE))
 #points_from_xy indicates 2 dimensions
 #print(df_geo)
-world_data=geopandas.read_file(geopandas.datasets.get_path('naturalearth_lowres'))
+'''world_data=geopandas.read_file(geopandas.datasets.get_path('naturalearth_lowres'))
 axis=world_data[world_data.continent=='Africa'].plot(color='blue', edgecolor='black' )
 print(df_geo.plot(ax=axis, color='black'))
 #guessing country names
@@ -51,7 +51,23 @@ f=px.choropleth(
     scope='africa',
     color=df['COUNTRY']
 )
-f.show()
-api = ss.SentinelAPI('aryamanskatoch', 'Chungus-rdr2', 'https://apihub.copernicus.eu/apihub')
-api.download('04548172-c64a-418f-8e83-7a4d148adf1e')
-api.get_product_odata('04548172-c64a-418f-8e83-7a4d148adf1e')
+f.show()'''
+ee='34NCF'
+df2=geopandas.read_file('/Users/indukatoch/Desktop/tile-country-mapping/Sentinel-2-Shapefile-Index/sentinel_2_index_centroid.shp')
+df2_geo=geopandas.GeoDataFrame(df2,geometry=geopandas.points_from_xy(df2.POINT_X, df2.POINT_Y))
+
+for i in df2_geo.index:
+    if df2_geo['Name'][i]==ee:
+        print(df2_geo['geometry'][i]) 
+        tile_point=df2_geo['geometry'][i]
+
+
+for j in df.index:
+    country_name=df['COUNTRY'][j]
+    country_point=df['geometry'][j]
+    
+    if country_point.intersects(tile_point)!=False:
+        print('tile lies in',country_name)
+    else:
+        continue
+
